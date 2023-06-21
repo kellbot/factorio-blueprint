@@ -1,6 +1,6 @@
 {
   "name": "factorio-blueprint",
-  "version": "2.6.4",
+  "version": "2.6.5",
   "description": "Factorio Blueprints API",
   "keywords": [
     "factorio",
@@ -52,6 +52,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/demipixel/factorio-blueprint.git"
+    "url": "git://github.com/kellbot/factorio-blueprint.git"
   }
 }
