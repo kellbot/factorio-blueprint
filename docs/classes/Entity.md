@@ -81,6 +81,18 @@ Dictionary of (module name) -> (# of that moudle). You *can* edit this property!
 }
 ```
 
+### snapping
+
+Dictionary with information on grid snapping, if set.
+```
+{
+  grid: {x: 48, y: 48}, //size of the grid
+  position: {x: 1, y: 1}, //location of the upper left corner of the grid on the blueprint
+  absolute: true //whether it is absolutely or relatively positioned
+
+}
+```
+
 ### INVENTORY_SIZE
 
 Number of slots this entity has
