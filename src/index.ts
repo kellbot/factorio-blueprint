@@ -18,19 +18,18 @@ export default class Blueprint {
   entityPositionGrid: { [location: string]: Entity };
   tilePositionGrid: { [location: string]: Tile };
   version: number;
-  snapping: { grid: Object, absolute: boolean };
+  snapping: { grid: Position, position: Position, absolute: boolean };
   checkWithEntityData: boolean;
 
 
   constructor(data?: any, opt: BlueprintOptions = {}) {
-    this.name = 'Blueprints';
+    this.name = 'Blueprint';
     this.icons = []; // Icons for Blueprint (up to 4)
     this.entities = []; // List of all entities in Blueprint
     this.tiles = []; // List of all tiles in Blueprint (such as stone path or concrete)
     this.entityPositionGrid = {}; // Object with tile keys in format "x,y" => entity
     this.tilePositionGrid = {};
     this.version = 281479273971713; // Factorio version 1.1.35
-    this.snapping = { grid: {}, absolute: false };
     this.checkWithEntityData =
       opt.checkWithEntityData != undefined ? opt.checkWithEntityData : true; // make sure checkName() validates with entityData
     if (data) this.load(data, opt);
@@ -386,18 +385,21 @@ export default class Blueprint {
       })
       .filter(Boolean);
 
-    console.log(this.snapping);
+    let details = {
+      icons: iconData,
+      entities: this.entities.length ? entityInfo : undefined,
+      tiles: this.tiles.length ? tileInfo : undefined,
+      item: 'blueprint',
+      version: this.version || 0,
+      label: this.name,
+    };
+    if (this.snapping.grid) {
+      details["snap-to-grid"] = this.snapping.grid;
+      details["absolute-snapping"] = this.snapping.absolute;
+      details["position-relative-to-grid"] = this.snapping.position;
+    }
     return {
-      blueprint: {
-        icons: iconData,
-        entities: this.entities.length ? entityInfo : undefined,
-        tiles: this.tiles.length ? tileInfo : undefined,
-        item: 'blueprint',
-        version: this.version || 0,
-        label: this.name,
-        "snap-to-grid": this.snapping.grid,
-        "absolute-snapping": this.snapping.absolute
-      },
+      blueprint: details
     };
   }
 
