@@ -396,7 +396,7 @@ export default class Blueprint {
       label: this.name,
       description: this.description
     };
-    if (this.snapping.grid) {
+    if (this.snapping) {
       details["snap-to-grid"] = this.snapping.grid;
       if (this.snapping.absolute) {
         details["absolute-snapping"] = true;
