@@ -12,6 +12,7 @@ import util from './util';
 
 export default class Blueprint {
   name: string;
+  description: string;
   icons: string[];
   entities: Entity[];
   tiles: Tile[];
@@ -24,6 +25,7 @@ export default class Blueprint {
 
   constructor(data?: any, opt: BlueprintOptions = {}) {
     this.name = 'Blueprint';
+    this.description = '';
     this.icons = []; // Icons for Blueprint (up to 4)
     this.entities = []; // List of all entities in Blueprint
     this.tiles = []; // List of all tiles in Blueprint (such as stone path or concrete)
@@ -392,6 +394,7 @@ export default class Blueprint {
       item: 'blueprint',
       version: this.version || 0,
       label: this.name,
+      description: this.description
     };
     if (this.snapping.grid) {
       details["snap-to-grid"] = this.snapping.grid;
