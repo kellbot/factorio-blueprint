@@ -395,8 +395,10 @@ export default class Blueprint {
     };
     if (this.snapping.grid) {
       details["snap-to-grid"] = this.snapping.grid;
-      details["absolute-snapping"] = this.snapping.absolute ? true : false;
-      details["position-relative-to-grid"] = this.snapping.position;
+      if (this.snapping.absolute) {
+        details["absolute-snapping"] = true;
+        details["position-relative-to-grid"] = this.snapping.position;
+      }
     }
     return {
       blueprint: details
