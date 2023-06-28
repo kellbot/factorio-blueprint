@@ -388,9 +388,17 @@ describe('Blueprint Books', () => {
   it('supports book label', () => {
     const bookString3 = Blueprint.toBook([bp1, bp2], 0, {}, { label: 'Custom Name' });
     const decoded = util.decode[0](bookString3);
-    console.log(decoded);
     assert.equal(decoded.blueprint_book.label, 'Custom Name');
   });
+
+  it('supports book icons', () => {
+    const bookString3 = Blueprint.toBook([bp1, bp2], 0, {}, { icons: ['straight_rail', 'iron_chest'] });
+    const decoded = util.decode[0](bookString3);
+    assert.equal(decoded.blueprint_book.icons[0].signal.name, 'straight-rail');
+  });
+
+
+
 });
 
 // vi: sts=2 ts=2 sw=2 et

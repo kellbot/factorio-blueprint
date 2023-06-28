@@ -523,13 +523,13 @@ function toBook(
       active_index: activeIndex,
       version: 0,
       label: bookOpt.label,
-      icons: bookOpt.icons ? this.icons
+      icons: bookOpt.icons ? bookOpt.icons
         .map((icon, i) => {
           return icon
             ? {
               signal: {
                 type: entityData[icon].type || 'item',
-                name: this.fixName(icon),
+                name: icon.replace(/_/g, '-'),
               },
               index: i + 1,
             }
