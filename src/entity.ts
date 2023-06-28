@@ -111,7 +111,7 @@ export default class Entity {
 
     this.filters = {}; // Filters for container
     this.requestFilters = {}; // Request filters for requester chest
-    this.directionType = data.type || 'input'; // Underground belts input/output
+    this.directionType = data.directionType || 'input'; // Underground belts input/output
     this.recipe = data.recipe ? this.bp.checkName(data.recipe) : undefined;
     this.bar = data.bar || -1;
 
@@ -843,7 +843,7 @@ export default class Entity {
         icon_signal_id: icon,
       };
     };
-    console.log(this);
+
     return {
       name: this.bp.fixName(this.name),
       position: this.center().subtract(new Victor(0.5, 0.5)) as {
