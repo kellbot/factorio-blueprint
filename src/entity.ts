@@ -954,7 +954,7 @@ export default class Entity {
 
       control_behavior:
         this.constants ||
-          this.condition ||
+          (this.condition && Object.keys(this.condition).length) ||
           this.trainControlBehavior ||
           this.name == 'decider_combinator' ||
           this.name == 'arithmetic_combinator'
