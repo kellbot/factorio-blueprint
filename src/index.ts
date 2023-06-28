@@ -494,8 +494,9 @@ export default class Blueprint {
     blueprints: (Blueprint | undefined | null)[],
     activeIndex = 0,
     opt?: EncodeOpt,
+    bookOpt?: BookOpt
   ) {
-    return toBook(blueprints, activeIndex, opt);
+    return toBook(blueprints, activeIndex, opt, bookOpt);
   }
 
   static isBook(str: string) {
@@ -511,6 +512,7 @@ function toBook(
   blueprints: (Blueprint | undefined | null)[],
   activeIndex = 0,
   opt: EncodeOpt = {},
+  bookOpt: BookOpt = {}
 ): string {
   const obj = {
     blueprint_book: {
@@ -520,6 +522,20 @@ function toBook(
       item: 'blueprint-book',
       active_index: activeIndex,
       version: 0,
+      label: bookOpt.label,
+      icons: bookOpt.icons ? this.icons
+        .map((icon, i) => {
+          return icon
+            ? {
+              signal: {
+                type: entityData[icon].type || 'item',
+                name: this.fixName(icon),
+              },
+              index: i + 1,
+            }
+            : null;
+        })
+        .filter(Boolean) : undefined
     },
   };
 
@@ -553,6 +569,10 @@ export interface BlueprintOptions extends BlueprintLoadOptions {
 
 interface EncodeOpt extends ToObjectOpt {
   version?: Version;
+}
+interface BookOpt extends ToObjectOpt {
+  label?: string;
+  icons?: string[];
 }
 
 interface ToObjectOpt {

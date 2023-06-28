@@ -137,7 +137,7 @@ export default class Blueprint {
     jsName(name: string): string;
     fixName(name: string): string;
     static getBook(str: string, opt?: BlueprintOptions): Blueprint[];
-    static toBook(blueprints: (Blueprint | undefined | null)[], activeIndex?: number, opt?: EncodeOpt): string;
+    static toBook(blueprints: (Blueprint | undefined | null)[], activeIndex?: number, opt?: EncodeOpt, bookOpt?: BookOpt): string;
     static isBook(str: string): boolean;
 }
 type Version = '0' | 'latest';
@@ -154,6 +154,10 @@ export interface BlueprintOptions extends BlueprintLoadOptions {
 }
 interface EncodeOpt extends ToObjectOpt {
     version?: Version;
+}
+interface BookOpt extends ToObjectOpt {
+    label?: string;
+    icons?: string[];
 }
 interface ToObjectOpt {
     autoConnectPoles?: boolean;
