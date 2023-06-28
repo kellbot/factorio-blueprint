@@ -386,27 +386,22 @@ export default class Blueprint {
           : null;
       })
       .filter(Boolean);
-
-    let details = {
-      icons: iconData,
-      entities: this.entities.length ? entityInfo : undefined,
-      tiles: this.tiles.length ? tileInfo : undefined,
-      item: 'blueprint',
-      version: this.version || 0,
-      label: this.name,
-      description: this.description
-    };
-    if (this.snapping) {
-      details["snap-to-grid"] = this.snapping.grid;
-      if (this.snapping.absolute) {
-        details["absolute-snapping"] = true;
-        details["position-relative-to-grid"] = this.snapping.position;
-      }
-    }
     return {
-      blueprint: details
+      blueprint: {
+        icons: iconData,
+        entities: this.entities.length ? entityInfo : undefined,
+        tiles: this.tiles.length ? tileInfo : undefined,
+        item: 'blueprint',
+        version: this.version || 0,
+        label: this.name,
+        description: this.description || undefined,
+        "absolute-snapping": this.snapping ? this.snapping.absolute : undefined,
+        "snap-to-grid": this.snapping ? this.snapping.grid : undefined,
+        "position-relative-to-grid": this.snapping ? this.snapping.position : undefined
+      },
     };
   }
+
 
   toJSON(opt: ToObjectOpt = {}) {
     return JSON.stringify(this.toObject(opt));
