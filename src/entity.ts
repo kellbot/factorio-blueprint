@@ -843,7 +843,7 @@ export default class Entity {
         icon_signal_id: icon,
       };
     };
-
+    console.log(this);
     return {
       name: this.bp.fixName(this.name),
       position: this.center().subtract(new Victor(0.5, 0.5)) as {
@@ -933,7 +933,7 @@ export default class Entity {
           )
           : undefined,
 
-      neighbours: this.neighbours.length > 0 ? this.neighbours.map((ent) => ent.id) : undefined,
+      neighbours: this.neighbours.length ? this.neighbours.map((ent) => ent.id) : undefined,
       parameters: this.parameters
         ? {
           playback_volume: useValueOrDefault(this.parameters.volume, 1.0),
