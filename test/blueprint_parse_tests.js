@@ -58,6 +58,16 @@ describe('Blueprint Parsing', () => {
       assert.equal(w.position.x, -1);
       assert.equal(w.position.y, 0);
     });
+
+    it('correctly orients input and outbut belts', () => {
+      const input =
+        '0eNqVUNEKwjAM/Jc8d+I6dbO/IiKbi6OwpaVNxSH7d9tNRPBh+BQuudxd8oSmD2idJgb1BE+1zdhkndNtwg9QhYARVD4J0FdDHtQp0nRHdZ8IPFoEBZpxAAFUDwndas9ZoBZd50ysWYM9Q1KIvUcSOwtAYs0aF8EZjBcKQ4MuElakBFjj47ahd8jtZj/HjDXatNrhdZlK8YlINqQQP2byXzO5bmYCz27xzvk16uvNAu7o/LJQ5bvyKMvDUW6rQk7TC5w9g8o=';
+      var bp = new Blueprint(input);
+      var l = bp.findEntity(new Victor(0, 0));
+      var r = bp.findEntity(new Victor(2, 0));
+      assert.equal(l.directionType, 'input');
+      assert.equal(r.directionType, 'output');
+    });
   });
 
   describe('recipes', () => {
@@ -316,7 +326,7 @@ describe('Blueprint Parsing', () => {
     });
   });
 
-  describe('connections', () => {});
+  describe('connections', () => { });
 
   describe('splitters', () => {
     function asserts(
