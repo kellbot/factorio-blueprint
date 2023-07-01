@@ -499,6 +499,14 @@ export default class Blueprint {
     return toBook(blueprints, activeIndex, opt, bookOpt);
   }
 
+  static toBookObject(
+    blueprints: (Blueprint | undefined | null)[],
+    activeIndex = 0,
+    opt?: EncodeOpt,
+  ) {
+    return toBookObject(blueprints, activeIndex, opt);
+  }
+
   static isBook(str: string) {
     return isBook(str);
   }
@@ -514,10 +522,22 @@ function toBook(
   opt: EncodeOpt = {},
   bookOpt: BookOpt = {}
 ): string {
+  const obj = toBookObject(blueprints, activeIndex, opt);
+  return util.encode[opt?.version || 'latest'](obj);
+}
+
+function toBookObject(
+  blueprints: (Blueprint | undefined | null)[],
+  activeIndex = 0,
+  opt: EncodeOpt = {},
+) {
   const obj = {
     blueprint_book: {
       blueprints: blueprints
-        .map((bp, index) => (bp ? { ...bp.toObject(opt), index } : null))
+        .map((bp, index) => {
+          if (!bp) return null;
+          return Array.isArray(bp) ? toBookObject(bp, activeIndex, opt) : { ...bp.toObject(opt), index }
+        })
         .filter(Boolean),
       item: 'blueprint-book',
       active_index: activeIndex,
@@ -538,8 +558,7 @@ function toBook(
         .filter(Boolean) : undefined
     },
   };
-
-  return util.encode[opt?.version || 'latest'](obj);
+  return obj;
 }
 
 function isBook(str: string): boolean {
