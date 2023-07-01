@@ -138,6 +138,7 @@ export default class Blueprint {
     fixName(name: string): string;
     static getBook(str: string, opt?: BlueprintOptions): Blueprint[];
     static toBook(blueprints: (Blueprint | undefined | null)[], activeIndex?: number, opt?: EncodeOpt, bookOpt?: BookOpt): string;
+    static toBookObject(blueprints: (Blueprint | undefined | null)[], activeIndex?: number, opt?: EncodeOpt): any;
     static isBook(str: string): boolean;
 }
 type Version = '0' | 'latest';

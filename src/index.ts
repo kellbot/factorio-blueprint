@@ -522,7 +522,7 @@ function toBook(
   opt: EncodeOpt = {},
   bookOpt: BookOpt = {}
 ): string {
-  const obj = toBookObject(blueprints, activeIndex, opt);
+  const obj = toBookObject(blueprints, activeIndex, opt, bookOpt);
   return util.encode[opt?.version || 'latest'](obj);
 }
 
@@ -530,13 +530,14 @@ function toBookObject(
   blueprints: (Blueprint | undefined | null)[],
   activeIndex = 0,
   opt: EncodeOpt = {},
+  bookOpt: BookOpt = {}
 ) {
   const obj = {
     blueprint_book: {
       blueprints: blueprints
         .map((bp, index) => {
           if (!bp) return null;
-          return Array.isArray(bp) ? toBookObject(bp, activeIndex, opt) : { ...bp.toObject(opt), index }
+          return Array.isArray(bp) ? toBookObject(bp, activeIndex, opt, bookOpt) : { ...bp.toObject(opt), index }
         })
         .filter(Boolean),
       item: 'blueprint-book',
