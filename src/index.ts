@@ -186,15 +186,15 @@ export default class Blueprint {
       const otherEnt = ent.getOverlap(this.entityPositionGrid);
       throw new Error(
         'Entity ' +
-          data.name +
-          ' overlaps ' +
-          // @ts-ignore
-          otherEnt.name +
-          ' entity (' +
-          data.position.x +
-          ', ' +
-          data.position.y +
-          ')',
+        data.name +
+        ' overlaps ' +
+        // @ts-ignore
+        otherEnt.name +
+        ' entity (' +
+        data.position.x +
+        ', ' +
+        data.position.y +
+        ')',
       );
     }
   }
@@ -373,12 +373,12 @@ export default class Blueprint {
       .map((icon, i) => {
         return icon
           ? {
-              signal: {
-                type: entityData[icon].type || 'item',
-                name: this.fixName(icon),
-              },
-              index: i + 1,
-            }
+            signal: {
+              type: entityData[icon].type || 'item',
+              name: this.fixName(icon),
+            },
+            index: i + 1,
+          }
           : null;
       })
       .filter(Boolean);
@@ -490,6 +490,14 @@ export default class Blueprint {
     return toBook(blueprints, activeIndex, opt);
   }
 
+  static toBookObject(
+    blueprints: (Blueprint | undefined | null)[],
+    activeIndex = 0,
+    opt?: EncodeOpt,
+  ) {
+    return toBookObject(blueprints, activeIndex, opt);
+  }
+
   static isBook(str: string) {
     return isBook(str);
   }
@@ -504,18 +512,29 @@ function toBook(
   activeIndex = 0,
   opt: EncodeOpt = {},
 ): string {
+  const obj = toBookObject(blueprints, activeIndex, opt);
+  return util.encode[opt?.version || 'latest'](obj);
+}
+
+function toBookObject(
+  blueprints: (Blueprint | undefined | null)[],
+  activeIndex = 0,
+  opt: EncodeOpt = {},
+) {
   const obj = {
     blueprint_book: {
       blueprints: blueprints
-        .map((bp, index) => (bp ? { ...bp.toObject(opt), index } : null))
+        .map((bp, index) => {
+          if (!bp) return null;
+          return Array.isArray(bp) ? toBookObject(bp, activeIndex, opt) : { ...bp.toObject(opt), index }
+        })
         .filter(Boolean),
       item: 'blueprint-book',
       active_index: activeIndex,
       version: 0,
     },
   };
-
-  return util.encode[opt?.version || 'latest'](obj);
+  return obj;
 }
 
 function isBook(str: string): boolean {

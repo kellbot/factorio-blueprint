@@ -133,7 +133,7 @@ describe('Blueprint Generation', () => {
     });
   });
 
-  describe('inventory filters', () => {});
+  describe('inventory filters', () => { });
 
   describe('logistic request filters', () => {
     //    it('storage chest ?', () => {
@@ -316,7 +316,7 @@ describe('Blueprint Generation', () => {
       };
 
       const obj = JSON.parse(JSON.stringify(bp.toObject()));
-      console.log(obj.blueprint.entities[0].control_behavior);
+      // console.log(obj.blueprint.entities[0].control_behavior);
       assert.deepEqual(obj.blueprint.entities[0].control_behavior, {
         circuit_condition: {
           first_signal: {
@@ -384,6 +384,14 @@ describe('Blueprint Books', () => {
     assert.equal(decoded[0], undefined);
     assert.equal(decoded[1], undefined);
     assert.equal(decoded[2].name, 'First');
+  });
+
+  it('supports nested books', () => {
+    const multiLevel = [
+      [bp1, bp2],
+      new Blueprint()
+    ];
+    assert.equal(Blueprint.toBookObject(multiLevel).blueprint_book.blueprints[0].blueprint_book.blueprints[0].blueprint.label, 'First');
   });
 });
 
