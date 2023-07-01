@@ -47,6 +47,24 @@ describe('Blueprint Generation', () => {
       assert.equal(obj.blueprint.entities[3].direction, 2);
       assert.equal(obj.blueprint.entities[3].name, 'express-transport-belt');
     });
+
+    it('correctly rotates underground belts in placed blueprints', () => {
+      const beltPrint = new Blueprint();
+      let aBelt = beltPrint.createEntity('fast_underground_belt', { x: 0, y: 0 }, Blueprint.RIGHT);
+      aBelt.setDirectionType('input');
+      let bBelt = beltPrint.createEntity('fast_underground_belt', { x: 4, y: 0 }, Blueprint.RIGHT);
+      bBelt.setDirectionType('output');
+      console.log(beltPrint.encode());
+      const basePrint = new Blueprint();
+      basePrint.placeBlueprint(beltPrint, { x: 2, y: 0 }, Blueprint.ROTATION_180_CCW);
+
+      assert.equal(basePrint.entities[0].position.x, 2);
+      assert.equal(basePrint.entities[0].directionType, 'input');
+
+      assert.equal(basePrint.entities[1].position.x, -2);
+      assert.equal(basePrint.entities[1].directionType, 'output');
+
+    });
   });
 
   describe('recipes', () => {
@@ -399,6 +417,5 @@ describe('Blueprint Books', () => {
 
 
 
-});
 
-// vi: sts=2 ts=2 sw=2 et
+});

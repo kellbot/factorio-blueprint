@@ -111,7 +111,7 @@ export default class Entity {
 
     this.filters = {}; // Filters for container
     this.requestFilters = {}; // Request filters for requester chest
-    this.directionType = data.directionType || null; // Underground belts input/output
+    this.directionType = myData.directionType ? data.type || data.directionType || 'input' : undefined; // Underground belts input/output
     this.recipe = data.recipe ? this.bp.checkName(data.recipe) : undefined;
     this.bar = data.bar || -1;
 
@@ -853,7 +853,7 @@ export default class Entity {
       direction: this.direction || 0,
       entity_number: -1,
 
-      type: /*this.HAS_DIRECTION_TYPE*/ this.directionType
+      type: this.HAS_DIRECTION_TYPE
         ? this.directionType
         : undefined,
       recipe: /*this.CAN_HAVE_RECIPE &&*/ this.recipe
