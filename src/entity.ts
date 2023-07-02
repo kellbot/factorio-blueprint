@@ -902,36 +902,33 @@ export default class Entity {
         }),
       ),
 
-      connections: undefined,
-      // this.connections.length ||
-      //   Object.keys(this.condition).length ||
-      //   Object.keys(this.circuitParameters).length
-      //   ?
-      //   this.connections.reduce(
-      //     (
-      //       obj: {
-      //         [side: string]: {
-      //           [color: string]: {
-      //             entity_id: number;
-      //             circuit_id?: string;
-      //           }[];
-      //         };
-      //       },
-      //       connection,
-      //     ) => {
-      //       let side = connection.side;
-      //       let color = connection.color;
-      //       if (!obj[side]) obj[side] = {};
-      //       if (!obj[side][color]) obj[side][color] = [];
-      //       obj[side][color].push({
-      //         entity_id: connection.entity.id,
-      //         circuit_id: connection.id,
-      //       });
-      //       return obj;
-      //     },
-      //     {},
-      //   )
-      //   : undefined,
+      connections:
+        this.connections.length
+          ? this.connections.reduce(
+            (
+              obj: {
+                [side: string]: {
+                  [color: string]: {
+                    entity_id: number;
+                    circuit_id?: string;
+                  }[];
+                };
+              },
+              connection,
+            ) => {
+              let side = connection.side;
+              let color = connection.color;
+              if (!obj[side]) obj[side] = {};
+              if (!obj[side][color]) obj[side][color] = [];
+              obj[side][color].push({
+                entity_id: connection.entity.id,
+                circuit_id: connection.id,
+              });
+              return obj;
+            },
+            {},
+          )
+          : undefined,
 
       neighbours: this.neighbours.length ? this.neighbours.map((ent) => ent.id) : undefined,
       parameters: this.parameters
