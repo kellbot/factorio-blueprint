@@ -111,18 +111,18 @@ export default class Entity {
 
     this.filters = {}; // Filters for container
     this.requestFilters = {}; // Request filters for requester chest
-    this.directionType = data.type || 'input'; // Underground belts input/output
+    this.directionType = myData.directionType ? data.type || 'input' : undefined; // Underground belts input/output
     this.recipe = data.recipe ? this.bp.checkName(data.recipe) : undefined;
     this.bar = data.bar || -1;
 
     this.modules = data.items
       ? Object.keys(data.items).reduce(
-          (obj: { [module: string]: number }, key) => {
-            obj[this.bp.checkName(key)] = data.items[key];
-            return obj;
-          },
-          {},
-        )
+        (obj: { [module: string]: number }, key) => {
+          obj[this.bp.checkName(key)] = data.items[key];
+          return obj;
+        },
+        {},
+      )
       : {};
 
     this.stationName = data.station ? data.station : undefined;
@@ -137,11 +137,11 @@ export default class Entity {
     this.size = myData
       ? new Victor(myData.width || 0, myData.height || 0) // Size in Victor form
       : entityData[this.name]
-      ? new Victor(
+        ? new Victor(
           entityData[this.name].width || 0,
           entityData[this.name].height || 0,
         )
-      : new Victor(1, 1);
+        : new Victor(1, 1);
     this.HAS_DIRECTION_TYPE = myData.directionType || false;
     this.CAN_HAVE_RECIPE = myData.recipe || false;
     this.CAN_HAVE_MODULES = myData.modules || 0;
@@ -280,8 +280,8 @@ export default class Entity {
       right: condition.second_signal
         ? condition.second_signal.name
         : condition.constant
-        ? parseInt(condition.constant)
-        : undefined,
+          ? parseInt(condition.constant)
+          : undefined,
       out: condition.output_signal ? condition.output_signal.name : undefined,
       operator: undefined,
 
@@ -619,9 +619,9 @@ export default class Entity {
     else if (opt.out == 'signal_each' && opt.left != 'signal_each')
       throw new Error(
         'Left condition must be signal_each for output to be signal_each.' +
-          (this.name != 'arithmetic_combinator'
-            ? ' Use signal_everything for the output instead'
-            : ''),
+        (this.name != 'arithmetic_combinator'
+          ? ' Use signal_everything for the output instead'
+          : ''),
       );
 
     if (opt.left) opt.left = this.bp.checkName(opt.left);
@@ -779,16 +779,16 @@ export default class Entity {
 
       out.first_signal = this.condition.left
         ? {
-            type: entityData[this.condition.left].type,
-            name: this.condition.left.replace(/_/g, '-'),
-          }
+          type: entityData[this.condition.left].type,
+          name: this.condition.left.replace(/_/g, '-'),
+        }
         : undefined;
       out.second_signal =
         typeof this.condition.right == 'string'
           ? {
-              type: entityData[this.condition.right].type,
-              name: this.condition.right.replace(/_/g, '-'),
-            }
+            type: entityData[this.condition.right].type,
+            name: this.condition.right.replace(/_/g, '-'),
+          }
           : undefined;
       out.constant =
         typeof this.condition.right == 'number'
@@ -798,9 +798,9 @@ export default class Entity {
       out.comparator = undefined;
       out.output_signal = this.condition.out
         ? {
-            type: entityData[this.condition.out].type,
-            name: this.condition.out.replace(/_/g, '-'),
-          }
+          type: entityData[this.condition.out].type,
+          name: this.condition.out.replace(/_/g, '-'),
+        }
         : undefined;
 
       if (this.name != 'arithmetic_combinator') {
@@ -872,14 +872,14 @@ export default class Entity {
 
       items:
         /*this.CAN_HAVE_MODULES &&*/ this.modules &&
-        Object.keys(this.modules).length
+          Object.keys(this.modules).length
           ? Object.keys(this.modules).reduce(
-              (obj: { [name: string]: number }, key) => {
-                obj[this.bp.fixName(key)] = this.modules[key];
-                return obj;
-              },
-              {},
-            )
+            (obj: { [name: string]: number }, key) => {
+              obj[this.bp.fixName(key)] = this.modules[key];
+              return obj;
+            },
+            {},
+          )
           : undefined,
 
       filters: makeEmptyArrayUndefined(
@@ -902,50 +902,50 @@ export default class Entity {
         }),
       ),
 
-      connections:
-        this.connections.length ||
-        this.condition ||
-        Object.keys(this.condition).length ||
-        Object.keys(this.circuitParameters).length
-          ? this.connections.reduce(
-              (
-                obj: {
-                  [side: string]: {
-                    [color: string]: {
-                      entity_id: number;
-                      circuit_id?: string;
-                    }[];
-                  };
-                },
-                connection,
-              ) => {
-                let side = connection.side;
-                let color = connection.color;
-                if (!obj[side]) obj[side] = {};
-                if (!obj[side][color]) obj[side][color] = [];
-                obj[side][color].push({
-                  entity_id: connection.entity.id,
-                  circuit_id: connection.id,
-                });
-                return obj;
-              },
-              {},
-            )
-          : undefined,
+      connections: undefined,
+      // this.connections.length ||
+      //   Object.keys(this.condition).length ||
+      //   Object.keys(this.circuitParameters).length
+      //   ?
+      //   this.connections.reduce(
+      //     (
+      //       obj: {
+      //         [side: string]: {
+      //           [color: string]: {
+      //             entity_id: number;
+      //             circuit_id?: string;
+      //           }[];
+      //         };
+      //       },
+      //       connection,
+      //     ) => {
+      //       let side = connection.side;
+      //       let color = connection.color;
+      //       if (!obj[side]) obj[side] = {};
+      //       if (!obj[side][color]) obj[side][color] = [];
+      //       obj[side][color].push({
+      //         entity_id: connection.entity.id,
+      //         circuit_id: connection.id,
+      //       });
+      //       return obj;
+      //     },
+      //     {},
+      //   )
+      //   : undefined,
 
-      neighbours: this.neighbours.map((ent) => ent.id),
+      neighbours: this.neighbours.length ? this.neighbours.map((ent) => ent.id) : undefined,
       parameters: this.parameters
         ? {
-            playback_volume: useValueOrDefault(this.parameters.volume, 1.0),
-            playback_globally: useValueOrDefault(
-              this.parameters.playGlobally,
-              false,
-            ),
-            allow_polyphony: useValueOrDefault(
-              this.parameters.allowPolyphony,
-              true,
-            ),
-          }
+          playback_volume: useValueOrDefault(this.parameters.volume, 1.0),
+          playback_globally: useValueOrDefault(
+            this.parameters.playGlobally,
+            false,
+          ),
+          allow_polyphony: useValueOrDefault(
+            this.parameters.allowPolyphony,
+            true,
+          ),
+        }
         : undefined,
 
       alert_parameters: this.alertParameters
@@ -954,59 +954,59 @@ export default class Entity {
 
       control_behavior:
         this.constants ||
-        this.condition ||
-        this.trainControlBehavior ||
-        this.name == 'decider_combinator' ||
-        this.name == 'arithmetic_combinator'
+          this.condition ||
+          this.trainControlBehavior ||
+          this.name == 'decider_combinator' ||
+          this.name == 'arithmetic_combinator'
           ? getOptionData({
-              ...this.trainControlBehavior,
+            ...this.trainControlBehavior,
 
-              filters:
-                this.constants && Object.keys(this.constants).length
-                  ? Object.keys(this.constants).map((key, i) => {
-                      // @ts-ignore
-                      const data = this.constants[key];
-                      return {
-                        signal: {
-                          name: this.bp.fixName(data.name),
-                          type: entityData[data.name].type,
-                        },
-                        count: data.count != undefined ? data.count : 0,
-                        index: parseInt(key) + 1,
-                      };
-                    })
-                  : undefined,
-
-              decider_conditions:
-                this.name == 'decider_combinator' ? getCondition() : undefined,
-              arithmetic_conditions:
-                this.name == 'arithmetic_combinator'
-                  ? getCondition()
-                  : undefined,
-              circuit_condition:
-                !this.name.includes('combinator') && this.condition.left
-                  ? getCondition()
-                  : undefined,
-
-              is_on:
-                this.name == 'constant_combinator' && !this.constantEnabled
-                  ? this.constantEnabled
-                  : undefined,
-
-              circuit_parameters: this.circuitParameters
-                ? {
-                    signal_value_is_pitch: useValueOrDefault(
-                      this.circuitParameters.signalIsPitch,
-                      false,
-                    ),
-                    instrument_id: useValueOrDefault(
-                      this.circuitParameters.instrument,
-                      0,
-                    ),
-                    note_id: useValueOrDefault(this.circuitParameters.note, 0),
-                  }
+            filters:
+              this.constants && Object.keys(this.constants).length
+                ? Object.keys(this.constants).map((key, i) => {
+                  // @ts-ignore
+                  const data = this.constants[key];
+                  return {
+                    signal: {
+                      name: this.bp.fixName(data.name),
+                      type: entityData[data.name].type,
+                    },
+                    count: data.count != undefined ? data.count : 0,
+                    index: parseInt(key) + 1,
+                  };
+                })
                 : undefined,
-            })
+
+            decider_conditions:
+              this.name == 'decider_combinator' ? getCondition() : undefined,
+            arithmetic_conditions:
+              this.name == 'arithmetic_combinator'
+                ? getCondition()
+                : undefined,
+            circuit_condition:
+              !this.name.includes('combinator') && this.condition.left
+                ? getCondition()
+                : undefined,
+
+            is_on:
+              this.name == 'constant_combinator' && !this.constantEnabled
+                ? this.constantEnabled
+                : undefined,
+
+            circuit_parameters: this.circuitParameters
+              ? {
+                signal_value_is_pitch: useValueOrDefault(
+                  this.circuitParameters.signalIsPitch,
+                  false,
+                ),
+                instrument_id: useValueOrDefault(
+                  this.circuitParameters.instrument,
+                  0,
+                ),
+                note_id: useValueOrDefault(this.circuitParameters.note, 0),
+              }
+              : undefined,
+          })
           : undefined,
     };
   }
