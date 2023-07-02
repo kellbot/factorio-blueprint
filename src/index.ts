@@ -69,6 +69,7 @@ export default class Blueprint {
     if (!data.icons) data.icons = [];
 
     this.name = data.label;
+    this.description = data.description;
     this.version = data.version;
 
     data.entities.forEach((entity: any) => {
