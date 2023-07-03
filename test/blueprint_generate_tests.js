@@ -357,6 +357,8 @@ describe('Blueprint output', () => {
   let bp = new Blueprint();
   bp.name = "custom label";
   bp.description = "custom description";
+  bp.createEntity('stone_wall', new Victor(0, 0));
+  bp.createEntity('fast_underground_belt', new Victor(2, 0));
   bp.setSnapping(new Victor(10, 20), true);
   let bpObj = bp.toObject().blueprint;
 
@@ -384,7 +386,35 @@ describe('Blueprint output', () => {
     assert.strictEqual(bpObj['absolute-snapping'], true);
   });
 
+  describe('entities', () => {
+    it('does not have empty neighbors', () => {
+      bpObj.entities.forEach(entity => {
+        if (entity.neighbours)
+          assert.notEqual(entity.neighbours.length, 0);
+      });
+    });
+
+    it('does not have empty connections', () => {
+      bpObj.entities.forEach(entity => {
+        if (entity.connections)
+          assert.notEqual(Object.keys(entity.connections).length, 0);
+      });
+    });
+    it('does not have a directionType on entities that do not support one', () => {
+      bpObj.entities.forEach(entity => {
+        if (entity.name == 'stone-wall')
+          assert.strictEqual(entity.type, undefined);
+      });
+    });
+    it('has a valid directionType on entities that support one', () => {
+      bpObj.entities.forEach(entity => {
+        if (entity.name == 'fast-underground-belt')
+          assert.strictEqual(['input', 'output'].includes(entity.type), true);
+      });
+    });
+  });
 });
+
 
 describe('Blueprint Books', () => {
   const bp1 = new Blueprint();

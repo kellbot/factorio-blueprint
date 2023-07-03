@@ -330,7 +330,17 @@ describe('Blueprint Parsing', () => {
     });
   });
 
-  describe('connections', () => { });
+  describe('connections', () => {
+    it('can read connections', () => {
+      const input =
+        '0eNqdkU2KwzAMhe+itRNip3/xVUooSSo6AkcOtlMagu9eO90UWgZmNkLPSO99yCv0ZsbJEQfQK9Bg2YM+r+Dpxp3Jb2GZEDRQwBEEcDdm5cfOmAINDsHRUEzWIEQBxFd8gJaxFYAcKBC+7DaxXHgee3Rp4FcjAZP1addyzk9+hap2VbkXsOS+aQ7lPoUlVk5rtCGvIHNxeH3Po6RUbGOaZqTbT29nl4FUG8UHlPozVF3/F0p+gZJtPtt2Z/32LQLu6PyWq05yd2zU8dCo6lSrGJ8NF5Mz';
+      let bp = new Blueprint(input);
+      bp.entities.forEach(entity => {
+        assert.equal(entity.connections.length, 1);
+        assert.equal(entity.connections[0].color, "red");
+      });
+    })
+  });
 
   describe('splitters', () => {
     function asserts(
