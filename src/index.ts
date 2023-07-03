@@ -3,14 +3,14 @@
 import prettyJSON from 'prettyjson';
 import Victor from 'victor';
 
-import book from './book';
+import Book from './book';
 import entityData from './defaultentities';
 import { generateElectricalConnections } from './electrical-connections';
 import Entity from './entity';
 import Tile from './tile';
 import util from './util';
 
-export default class Blueprint {
+export class Blueprint {
   name: string;
   description: string;
   icons: string[];
@@ -499,7 +499,7 @@ export default class Blueprint {
 }
 
 function getBook(str: string, opt?: BlueprintOptions) {
-  return book(str, opt);
+  return Book.load(str, opt).blueprints;
 }
 
 function toBook(
@@ -552,4 +552,9 @@ interface EncodeOpt extends ToObjectOpt {
 
 interface ToObjectOpt {
   autoConnectPoles?: boolean;
+}
+
+export default {
+  Blueprint: Blueprint,
+  Book: Book
 }

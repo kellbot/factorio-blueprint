@@ -1,4 +1,4 @@
-import Blueprint from './';
+import { Blueprint } from './';
 import Entity from './entity';
 
 export function generateElectricalConnections(bp: Blueprint) {
@@ -18,10 +18,10 @@ export function generateElectricalConnections(bp: Blueprint) {
         (otherPole) =>
           otherPole.id < pole.id &&
           pole.position.distance(otherPole.position) <=
-            Math.min(
-              entityData[pole.name].maxElectricReach || 0,
-              entityData[otherPole.name].maxElectricReach || 0,
-            ),
+          Math.min(
+            entityData[pole.name].maxElectricReach || 0,
+            entityData[otherPole.name].maxElectricReach || 0,
+          ),
       )
       .sort((a, b) => {
         const aSqDist = pole.position.distanceSq(a.position);
@@ -33,8 +33,8 @@ export function generateElectricalConnections(bp: Blueprint) {
               ? -1
               : 1
             : a.position.y < b.position.y
-            ? -1
-            : 1;
+              ? -1
+              : 1;
         } else {
           return aSqDist < bSqDist ? -1 : 1;
         }
