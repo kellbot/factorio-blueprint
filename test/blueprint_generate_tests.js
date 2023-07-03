@@ -370,14 +370,6 @@ describe('Blueprint output', () => {
     assert.equal(bpObj.description, "custom description");
   })
 
-  it('correctly handles blueprint labels', () => {
-    assert.equal(bpObj.label, "custom label");
-  });
-
-  it('correctly handles blueprint descriptions', () => {
-    assert.equal(bpObj.description, "custom description");
-  })
-
   it('correnctly handles snapping size', () => {
     assert.equal(bpObj["snap-to-grid"].x, 10);
     assert.equal(bpObj["snap-to-grid"].y, 20);
