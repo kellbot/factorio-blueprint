@@ -17,16 +17,54 @@ describe('Blueprint Books', () => {
             assert.equal(typeof encodedString, 'string');
         });
 
+
+        it('encodes with undefined and null values', () => {
+            const bookString2 = Blueprint.toBook([undefined, null, bp1]);
+
+            const bb = Book.load(bookString2);
+            assert.equal(bb.blueprintData.length, 3);
+            assert.equal(bb.blueprintData[0], undefined);
+            assert.equal(bb.blueprintData[1], undefined);
+            assert.equal(bb.blueprintData[2].blueprint.name, 'First');
+        });
+
     })
 
     describe('parsing', () => {
         // A simple blueprint book consisting of two blueprints named BP1 and BP2
         const importString =
-            '0eNqtks1qwzAQhN9lz3KQ5eZPxzxB76UYOdkWUXtlpE2oCX73rmxKfCihKb1pRqtvpEFXaNoz9tET100IH2CvNyeBfVnIvOePgWY7+XdybfZ46BEseMYOFJDrsnpziQuOjlIfIhcNtgyjAk8n/ARbjq8KkNizxxk3iaGmc9dglIG7IAV9SHI2UM4XXmH0plqtFQyyrrQ2q7WEnXzE4zxlcuB0Q7t4kILWCVC8w7MRdcGY5vFd+bTdm+1mb/SuMreL61H9tZH/KOPRHvTjPZS/6qH8iVNMP2gBE5lxTsIvWH9XeIc/fgE1XdRZ';
+            '0eNqtkktuwzAMRO/CtRzIcvPTsifovigMOWELoTZlSExQI/DdS9ko4kX6RXcainxDDXSBpj1hHz1x3YTwCvZyrSSwjwuZ7/wh0FxO/oVcm2s89AgWPGMHCsh1WXF0lPoQuWiwZRgVeDriG9hyfFKAxJ49zqRJDDWdugajNHzGUNCHJGOBsqugCqM31WqtYJBzpbVercXn6CMe5i6Tvaa97OIZClonQKndP5SizhjT3L4r77Z7s93sjd5V5rqzHtVfc3h2iYv/COMW6NtEzO8TMT9KpLzFKaYftICJzAE7MT9j/TH6BX98B6371Fo=';
+        const bb = Book.load(importString);
+
         it('parses book', () => {
-            assert.equal(Book.load(importString).blueprints.length, 2);
+            assert.equal(bb.blueprintData.length, 2);
         });
 
+        it('has index on each blueprint', () => {
+            bb.blueprintData.forEach(entry => {
+                assert.equal(Number.isInteger(entry.index), true);
+            })
+        });
+
+        it('sorts based on index', () => {
+            // decode and swap the blueprint from the test book
+            const decoded = util.decode[0](importString);
+            const [decodedBp1, decodedBp2] = decoded.blueprint_book.blueprints;
+            decoded.blueprint_book.blueprints = [decodedBp2, decodedBp1];
+
+            const encoded = util.encode[0](decoded);
+            const nb = Book.load(encoded);
+
+            for (let i = 0; i < nb.blueprintData.length; i++) {
+                assert.equal(nb.blueprintData[i].index, i);
+                assert.equal(nb.blueprintData[i].blueprint.name, 'BP' + (i + 1));
+            }
+        });
+
+        it('checks bp string type', () => {
+            assert.equal(Book.isBook(importString), true);
+            assert.equal(Book.isBook(bp1.encode()), false);
+        });
 
     })
 
@@ -37,13 +75,13 @@ describe('Blueprint Books', () => {
             assert.equal(Blueprint.getBook(bookString).length, 2);
         });
 
-        it('has index on each blueprint', () => {
+        it('has index on each blueprint - legacy', () => {
             const decoded = util.decode[0](bookString);
             assert.equal(decoded.blueprint_book.blueprints[0].index, 0);
             assert.equal(decoded.blueprint_book.blueprints[1].index, 1);
         });
 
-        it('sorts based on index', () => {
+        it('sorts based on index - legacy', () => {
             const decoded = util.decode[0](bookString);
             const [decodedBp1, decodedBp2] = decoded.blueprint_book.blueprints;
             decoded.blueprint_book.blueprints = [decodedBp2, decodedBp1];
@@ -56,12 +94,12 @@ describe('Blueprint Books', () => {
             assert.equal(book[1].name, 'Second');
         });
 
-        it('checks bp string type', () => {
+        it('checks bp string type - legacy', () => {
             assert.equal(Blueprint.isBook(bookString), true);
             assert.equal(Blueprint.isBook(bp1.encode()), false);
         });
 
-        it('encodes with undefined and null values', () => {
+        it('encodes with undefined and null values - legacy', () => {
             const bookString2 = Blueprint.toBook([undefined, null, bp1]);
 
             const decoded = Blueprint.getBook(bookString2);
@@ -70,7 +108,7 @@ describe('Blueprint Books', () => {
             assert.equal(decoded[2].name, 'First');
         });
 
-        it('is a string', () => {
+        it('is a string - legacy', () => {
             assert.equal(typeof bookString, 'string');
         });
 

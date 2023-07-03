@@ -499,7 +499,7 @@ export class Blueprint {
 }
 
 function getBook(str: string, opt?: BlueprintOptions) {
-  return Book.load(str, opt).blueprints;
+  return Book.load(str, opt).blueprintData.map(bd => (bd.blueprint));
 }
 
 function toBook(
@@ -522,13 +522,7 @@ function toBook(
 }
 
 function isBook(str: string): boolean {
-  const version = str.slice(0, 1);
-  if (version !== '0') {
-    throw new Error('No decoder found for blueprint book version ' + version);
-  }
-  let obj = util.decode[version](str);
-
-  return typeof obj.blueprint_book === 'object';
+  return Book.isBook(str);
 }
 
 type Version = '0' | 'latest';
