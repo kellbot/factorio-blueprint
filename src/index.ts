@@ -10,7 +10,7 @@ import Entity from './entity';
 import Tile from './tile';
 import util from './util';
 
-export class Blueprint {
+export default class Blueprint {
   name: string;
   description: string;
   icons: string[];
@@ -512,6 +512,10 @@ export class Blueprint {
   static isBook(str: string) {
     return isBook(str);
   }
+
+  static get Book() {
+    return { Book }
+  }
 }
 
 function getBook(str: string, opt?: BlueprintOptions) {
@@ -562,9 +566,4 @@ interface EncodeOpt extends ToObjectOpt {
 
 interface ToObjectOpt {
   autoConnectPoles?: boolean;
-}
-
-export default {
-  Blueprint: Blueprint,
-  Book: Book
 }

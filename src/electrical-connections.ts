@@ -1,4 +1,4 @@
-import { Blueprint } from './';
+import Blueprint from './';
 import Entity from './entity';
 
 export function generateElectricalConnections(bp: Blueprint) {

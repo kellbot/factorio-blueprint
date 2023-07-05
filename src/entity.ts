@@ -1,7 +1,7 @@
 import Victor from 'victor';
 
 import entityData from './defaultentities';
-import { Blueprint } from './index';
+import Blueprint from './index';
 
 type PositionGrid = { [location: string]: Entity };
 type Side = 1 | 2 | 'in' | 'out';
