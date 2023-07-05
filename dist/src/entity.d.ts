@@ -1,5 +1,5 @@
 import Victor from 'victor';
-import { Blueprint } from './index';
+import Blueprint from './index';
 type PositionGrid = {
     [location: string]: Entity;
 };

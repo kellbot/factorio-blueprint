@@ -2,7 +2,7 @@ import Victor from 'victor';
 import Book from './book';
 import Entity from './entity';
 import Tile from './tile';
-export declare class Blueprint {
+export default class Blueprint {
     name: string;
     description: string;
     icons: string[];
@@ -141,6 +141,9 @@ export declare class Blueprint {
     static getBook(str: string, opt?: BlueprintOptions): Blueprint[];
     static toBook(blueprints: (Blueprint | undefined | null)[], activeIndex?: number, opt?: EncodeOpt): string;
     static isBook(str: string): boolean;
+    static get Book(): {
+        Book: typeof Book;
+    };
 }
 type Version = '0' | 'latest';
 interface Position {
@@ -160,8 +163,4 @@ interface EncodeOpt extends ToObjectOpt {
 interface ToObjectOpt {
     autoConnectPoles?: boolean;
 }
-declare const _default: {
-    Blueprint: typeof Blueprint;
-    Book: typeof Book;
-};
-export default _default;
+export {};

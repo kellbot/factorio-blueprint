@@ -1,7 +1,7 @@
 /**
  * Created by anth on 21.05.2017.
  */
-import { Blueprint } from './index';
+import Blueprint from './index';
 export default class Book {
     blueprintData: {
         blueprint: Blueprint;
