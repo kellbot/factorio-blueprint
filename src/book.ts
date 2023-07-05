@@ -7,6 +7,10 @@ import util from './util';
 
 export default class Book {
   blueprintData: { blueprint: Blueprint, index?: number }[];
+  name: string;
+  description: string;
+  activeIndex: number;
+
 
   constructor() {
     this.blueprintData = [];
@@ -51,13 +55,24 @@ export default class Book {
     return this.fillFromObject(data, opt);
   }
 
+  toObject() {
+    return {
+      'blueprint_book': {
+        label: this.name || undefined,
+        item: 'blueprint-book',
+        description: this.description || undefined,
+        blueprints: this.blueprintData.map(entry => ({ index: entry.index, blueprint: entry.blueprint }))
+      }
+    }
+  }
+
   /**
   * Returns the string for import into Factorio.
   *
   * @returns compressed JSON string
   */
   encode() {
-    return 'string'
+    return util.encode[0](this.toObject())
   }
 
 

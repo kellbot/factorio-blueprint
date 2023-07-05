@@ -7,6 +7,9 @@ export default class Book {
         blueprint: Blueprint;
         index?: number;
     }[];
+    name: string;
+    description: string;
+    activeIndex: number;
     constructor();
     /**
      * Loads an encoded string or JSON object into a book
@@ -24,6 +27,17 @@ export default class Book {
      */
     static isBook(data: any): boolean;
     load(data: any, opt?: BookOptions): Book;
+    toObject(): {
+        blueprint_book: {
+            label: string | undefined;
+            item: string;
+            description: string | undefined;
+            blueprints: {
+                index: number | undefined;
+                blueprint: Blueprint;
+            }[];
+        };
+    };
     /**
     * Returns the string for import into Factorio.
     *

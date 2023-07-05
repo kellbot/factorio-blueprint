@@ -10,12 +10,30 @@ describe('Blueprint Books', () => {
     const bp2 = new Blueprint();
     bp2.name = 'Second';
 
-    const encodedString = new Book([bp1, bp2]).encode();
+    let testBook = new Book([bp1, bp2]);
+    const encodedString = testBook.encode();
 
-    describe('creation', () => {
+    describe('encoding', () => {
+
         it('is a string', () => {
             assert.equal(typeof encodedString, 'string');
         });
+
+        it('supports book names', () => {
+            testBook.name = 'Test Name';
+            const nameObj = testBook.toObject();
+            assert.equal(nameObj.blueprint_book.label, 'Test Name')
+        });
+
+        it('supports book descriptions', () => {
+            testBook.description = 'Test description';
+            const nameObj = testBook.toObject();
+            assert.equal(nameObj.blueprint_book.description, 'Test description')
+        })
+
+        it('supports nested books', () => {
+            assert.equal(true, false);
+        })
 
 
         it('encodes with undefined and null values', () => {
@@ -39,6 +57,18 @@ describe('Blueprint Books', () => {
         it('parses book', () => {
             assert.equal(bb.blueprintData.length, 2);
         });
+
+        it('loads book name and description', () => {
+            assert.equal(bb.name, 'Book1');
+        })
+
+        it('loads nested books', () => {
+            assert.equal(true, false);
+        });
+
+        it('loads names on nested books', () => {
+            assert.equal(true, false);
+        })
 
         it('has index on each blueprint', () => {
             bb.blueprintData.forEach(entry => {
