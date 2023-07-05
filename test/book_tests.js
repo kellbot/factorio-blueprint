@@ -1,8 +1,8 @@
 const assert = require('assert');
-const { Blueprint, Book } = require('../dist/factorio-blueprint.min.js');
+const Blueprint = require('../dist/factorio-blueprint.min.js');
 const Victor = require('victor');
 const util = require('./util');
-
+const { Book } = Blueprint.Book;
 
 describe('Blueprint Books', () => {
     const bp1 = new Blueprint();

@@ -2,7 +2,7 @@
  * Created by anth on 21.05.2017.
  */
 
-import { Blueprint, BlueprintOptions } from './index';
+import Blueprint, { BlueprintOptions } from './index';
 import util from './util';
 
 export default class Book {

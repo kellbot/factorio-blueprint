@@ -1,7 +1,7 @@
 import Victor from 'victor';
 
 import entityData from './defaultentities';
-import { Blueprint } from './index';
+import Blueprint from './index';
 
 export default class Tile {
   id: number;
