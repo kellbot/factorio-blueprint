@@ -10,12 +10,54 @@ describe('Blueprint Books', () => {
     const bp2 = new Blueprint();
     bp2.name = 'Second';
 
-    const encodedString = new Book([bp1, bp2]).encode();
+    let testBook = new Book([bp1, bp2]);
+    const encodedString = testBook.encode();
 
-    describe('creation', () => {
+    it('adds blueprints', () => {
+        testBook.addItem(new Blueprint());
+        assert.equal(testBook.blueprintData.length, 3);
+    })
+
+    it('adds books', () => {
+        addedBook = new Book().addItem(new Book());
+        assert.equal(addedBook.blueprintData.length, 1);
+        assert.notStrictEqual(addedBook.blueprintData[0].blueprint_book, undefined);
+
+    })
+
+    describe('encoding', () => {
+
+        it('has blueprints', () => {
+            const obj = testBook.toObject();
+            assert.equal(obj.blueprint_book.blueprints.length, 3);
+        })
+
         it('is a string', () => {
             assert.equal(typeof encodedString, 'string');
         });
+
+        it('supports book names', () => {
+            testBook.name = 'Test Name';
+            const nameObj = testBook.toObject();
+            assert.equal(nameObj.blueprint_book.label, 'Test Name')
+        });
+
+        it('supports book descriptions', () => {
+            testBook.description = 'Test description';
+            const nameObj = testBook.toObject();
+            assert.equal(nameObj.blueprint_book.description, 'Test description')
+        })
+
+        it('supports nested books', () => {
+            const subBook = new Book();
+            subBook.name = 'Nested Book';
+            testBook.addBook(subBook);
+            const obj = testBook.toObject();
+
+            assert.equal(obj.blueprint_book.blueprints[3].blueprint_book.label, 'Nested Book');
+
+            console.log(testBook.encode());
+        })
 
 
         it('encodes with undefined and null values', () => {
@@ -28,17 +70,41 @@ describe('Blueprint Books', () => {
             assert.equal(bb.blueprintData[2].blueprint.name, 'First');
         });
 
+
     })
 
     describe('parsing', () => {
         // A simple blueprint book consisting of two blueprints named BP1 and BP2
         const importString =
-            '0eNqtkktuwzAMRO/CtRzIcvPTsifovigMOWELoTZlSExQI/DdS9ko4kX6RXcainxDDXSBpj1hHz1x3YTwCvZyrSSwjwuZ7/wh0FxO/oVcm2s89AgWPGMHCsh1WXF0lPoQuWiwZRgVeDriG9hyfFKAxJ49zqRJDDWdugajNHzGUNCHJGOBsqugCqM31WqtYJBzpbVercXn6CMe5i6Tvaa97OIZClonQKndP5SizhjT3L4r77Z7s93sjd5V5rqzHtVfc3h2iYv/COMW6NtEzO8TMT9KpLzFKaYftICJzAE7MT9j/TH6BX98B6371Fo=';
+            '0eNqtkk1uwyAQha9SzRpHGDd/XlY9QPdRZGF70qLagIAktSLfvWBUhUppk1bZ8R4zb4ZPnKDu9qiNkK6qlXqH8nR2LJSbRIY70SgZbSteJe+C5waNUIJw2AMByfugnOHSamVcVmPnYCQgZIsfUObjlgBKJ5zAmDSJoZL7vkbjC37KIKCV9W1Khqk+KmN0UczmBAZ/Liils7mf0wqDTaxiYda0V5k8g0DHfaD3nl5yrw5obCxf5Y/LNVsu1oyuCnbemY7kvxx23LrsHjAuBV0lwv5OhN1EJL+Uk00/KAnzMgBu0TZG6LhBdB+eE4/cjvOoVPuNH7naYvgx2wn7lrRNFLhHcsDqK+mXV4+fymgGIg==';
         const bb = Book.load(importString);
 
         it('parses book', () => {
             assert.equal(bb.blueprintData.length, 2);
         });
+
+        it('loads book name and description', () => {
+            assert.equal(bb.name, 'Book1');
+            assert.equal(bb.description, 'Book1 Description');
+        })
+
+        it('loads nested books', () => {
+            const importString =
+                '0eNqtU8tugzAQ/BW0ZxOByZNj1Fyr3KsogrBprIKNbOeBIv69dqw2FJGGRLmxD8/szixnSPM9lpJxvU6F+IL4fM0oiD8aoa2xjeAurdgnT3Kb01WJEAPTWAABnhQ20jLhqhRS+ynmGmoCjGd4gjisVwSQa6YZOqRLUK35vkhRmoZbGARKocwzwS2rgfJpMI4GIwKV+Y6CIBiMDE/GJG5cF7Vcl7nixhoE8sQAmtx8GZrogFK59mk4nMzoZDyjwTSi15mDmjyrwzZR2n+FGF1AdxWhjytCeykS/lHk93TayP6lcIVfFKWuvHdUGjNv7mqJGe2A6x+p+7DTbvaXHC6eSolKvcSzG1hdtkWThm3Ro7YtHJE3X/a85w64tlcNlzz6nE/DPjyWwP6GGaqNZKVb2GW9t0aO9PfwKEQGrWO980QmR3/L1A6aV7Zqbx3+s3X9DZtnul4=';
+            const bb = Book.load(importString);
+            const nestedBooks = bb.blueprintData.filter(data => (data.blueprint_book));
+
+            assert.equal(nestedBooks.length, 2);
+        });
+
+        it('loads names on nested books', () => {
+            const importString =
+                '0eNqtU8tugzAQ/BW0ZxOByZNj1Fyr3KsogrBprIKNbOeBIv69dqw2FJGGRLmxD8/szixnSPM9lpJxvU6F+IL4fM0oiD8aoa2xjeAurdgnT3Kb01WJEAPTWAABnhQ20jLhqhRS+ynmGmoCjGd4gjisVwSQa6YZOqRLUK35vkhRmoZbGARKocwzwS2rgfJpMI4GIwKV+Y6CIBiMDE/GJG5cF7Vcl7nixhoE8sQAmtx8GZrogFK59mk4nMzoZDyjwTSi15mDmjyrwzZR2n+FGF1AdxWhjytCeykS/lHk93TayP6lcIVfFKWuvHdUGjNv7mqJGe2A6x+p+7DTbvaXHC6eSolKvcSzG1hdtkWThm3Ro7YtHJE3X/a85w64tlcNlzz6nE/DPjyWwP6GGaqNZKVb2GW9t0aO9PfwKEQGrWO980QmR3/L1A6aV7Zqbx3+s3X9DZtnul4=';
+            const bb = Book.load(importString);
+            const nestedBooks = bb.blueprintData.filter(data => (data.blueprint_book));
+
+            assert.equal(nestedBooks[0].blueprint_book.name, 'Empty Nested Book');
+        })
 
         it('has index on each blueprint', () => {
             bb.blueprintData.forEach(entry => {
