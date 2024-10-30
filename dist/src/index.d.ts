@@ -1,4 +1,5 @@
 import Victor from 'victor';
+import Book from './book';
 import Entity from './entity';
 import Tile from './tile';
 export default class Blueprint {
@@ -137,9 +138,12 @@ export default class Blueprint {
     checkName(name: string): string;
     jsName(name: string): string;
     fixName(name: string): string;
-    static getBook(str: string, opt?: BlueprintOptions): Blueprint[];
+    static getBook(str: string, opt?: BlueprintOptions): (Blueprint | undefined)[];
     static toBook(blueprints: (Blueprint | undefined | null)[], activeIndex?: number, opt?: EncodeOpt): string;
     static isBook(str: string): boolean;
+    static get Book(): {
+        Book: typeof Book;
+    };
 }
 type Version = '0' | 'latest';
 interface Position {
