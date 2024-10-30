@@ -14,12 +14,12 @@ export default class Blueprint {
         [location: string]: Tile;
     };
     version: number;
+    checkWithEntityData: boolean;
     snapping: {
         grid: Position;
-        position: Position;
-        absolute: boolean;
+        position?: Position;
+        absolute?: boolean;
     };
-    checkWithEntityData: boolean;
     constructor(data?: any, opt?: BlueprintOptions);
     toString(opt: ToObjectOpt): string;
     load(data: any, opt?: BlueprintOptions): this;
@@ -37,6 +37,7 @@ export default class Blueprint {
     removeEntityAtPosition(position: Position): false | Entity;
     removeTileAtPosition(position: Position): false | Tile;
     setIds(): this;
+    setSnapping(size: Position, absolute?: boolean, absolutePosition?: Position): void;
     getPosition(f: 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight', xcomp: Math['min'] | Math['max'], ycomp: Math['min'] | Math['max']): Victor;
     center(): Victor;
     topLeft(): Victor;

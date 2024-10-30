@@ -15,7 +15,7 @@ interface Connection {
 }
 interface CombinatorData {
     left?: string;
-    right?: string;
+    right?: string | number;
     operator?: string;
     out?: string;
     controlEnable?: boolean;
@@ -100,8 +100,16 @@ export default class Entity {
     checkNoOverlap(positionGrid: PositionGrid): boolean;
     getOverlap(positionGrid: PositionGrid): Entity | null;
     tileDataAction(positionGrid: PositionGrid, fn: (x: number, y: number) => void): void;
-    connect(ent: Entity, mySide?: Side, theirSide?: Side, color?: Color): this;
-    removeConnection(ent: Entity, mySide?: Side, theirSide?: Side, color?: Color): this;
+    connect(ent: Entity, { fromSide, toSide, color }: {
+        fromSide?: Side;
+        toSide?: Side;
+        color: Color;
+    }): this;
+    removeConnection(ent: Entity, { fromSide, toSide, color }: {
+        fromSide?: Side;
+        toSide?: Side;
+        color: Color;
+    }): this;
     removeConnectionsWithEntity(ent: Entity, color: Color): this;
     removeAllConnections(): this;
     setFilter(pos: number, name: string): this;

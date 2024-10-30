@@ -133,7 +133,7 @@ describe('Blueprint Generation', () => {
     });
   });
 
-  describe('inventory filters', () => {});
+  describe('inventory filters', () => { });
 
   describe('logistic request filters', () => {
     //    it('storage chest ?', () => {
@@ -217,7 +217,7 @@ describe('Blueprint Generation', () => {
         { x: 0, y: 5 },
         Blueprint.UP,
       );
-      e1.connect(e2, null, null, 'red');
+      e1.connect(e2, { color: 'red' });
 
       const obj = bp.toObject();
 
@@ -255,6 +255,23 @@ describe('Blueprint Generation', () => {
       assert.equal(obj.blueprint.entities[0].input_priority, 'left');
       assert.equal(obj.blueprint.entities[0].output_priority, 'right');
     });
+  });
+
+  describe('snapping', () => {
+    const bp = new Blueprint();
+    let grid = new Victor(10, 12);
+    bp.setSnapping(grid);
+    it('should default to relative snapping', () => {
+      assert.strictEqual(bp.snapping.absolute, undefined);
+    });
+    it('should save snapping information', () => {
+      assert.equal(bp.snapping.grid, grid);
+    });
+    it('should support absolute snapping', () => {
+      bp.setSnapping(grid, true);
+      assert.strictEqual(bp.snapping.absolute, true);
+    });
+
   });
 
   describe('icons', () => {
@@ -316,7 +333,6 @@ describe('Blueprint Generation', () => {
       };
 
       const obj = JSON.parse(JSON.stringify(bp.toObject()));
-      console.log(obj.blueprint.entities[0].control_behavior);
       assert.deepEqual(obj.blueprint.entities[0].control_behavior, {
         circuit_condition: {
           first_signal: {
@@ -335,6 +351,32 @@ describe('Blueprint Generation', () => {
       });
     });
   });
+
+});
+
+describe('Blueprint output', () => {
+  let bp = new Blueprint();
+  bp.name = "custom label";
+  bp.description = "custom description";
+  bp.setSnapping(new Victor(10, 20), true);
+  let bpObj = bp.toObject().blueprint;
+
+  it('correctly handles blueprint labels', () => {
+    assert.equal(bpObj.label, "custom label");
+  });
+
+  it('correctly handles blueprint descriptions', () => {
+    assert.equal(bpObj.description, "custom description");
+  })
+
+  it('correnctly handles snapping size', () => {
+    assert.equal(bpObj["snap-to-grid"].x, 10);
+    assert.equal(bpObj["snap-to-grid"].y, 20);
+  });
+  it('correctly handles absolute snapping', () => {
+    assert.strictEqual(bpObj['absolute-snapping'], true);
+  });
+
 });
 
 describe('Blueprint Books', () => {

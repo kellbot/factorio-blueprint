@@ -19,8 +19,8 @@ export default class Blueprint {
   entityPositionGrid: { [location: string]: Entity };
   tilePositionGrid: { [location: string]: Tile };
   version: number;
-  snapping: { grid: Position, position: Position, absolute: boolean };
   checkWithEntityData: boolean;
+  snapping: { grid: Position, position?: Position, absolute?: boolean };
 
 
   constructor(data?: any, opt: BlueprintOptions = {}) {
@@ -71,6 +71,7 @@ export default class Blueprint {
     if (!data.icons) data.icons = [];
 
     this.name = data.label;
+    this.description = data.description;
     this.version = data.version;
 
     data.entities.forEach((entity: any) => {
@@ -93,6 +94,10 @@ export default class Blueprint {
     data.icons.forEach((icon: any) => {
       this.icons[icon.index - 1] = this.checkName(icon.signal.name);
     });
+
+    if (data['snap-to-grid']) {
+      this.setSnapping(data['snap-to-grid'], data['absolute-snapping'], data['position-relative-to-grid']);
+    }
 
     this.setIds();
 
@@ -274,6 +279,14 @@ export default class Blueprint {
       tile.id = i + 1;
     });
     return this;
+  }
+
+  setSnapping(size: Position, absolute?: boolean, absolutePosition?: Position) {
+    this.snapping = {
+      grid: size,
+      absolute: absolute,
+      position: absolutePosition,
+    }
   }
 
   // Get corner/center positions
